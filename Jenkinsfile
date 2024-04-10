@@ -22,7 +22,7 @@ pipeline {
                 }
             }
         }
-        stages {
+        stage {
             stage('Inspect Docker Image') {
                 steps {
                     script {
