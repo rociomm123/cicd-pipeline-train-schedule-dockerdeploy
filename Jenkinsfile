@@ -19,7 +19,7 @@ pipeline {
             }
             steps {
                 script {
-                    test=docker images | grep rociomm123/train-schedule
+                    test=test
                     print "hola1="+test
                     app = docker.build("rociomm123/train-schedule")
                     app.inside {
@@ -50,12 +50,16 @@ pipeline {
 
                     // Increment version number by 0.001 and format to three decimal places
                     // def incrementedVersion = String.format("%.3f", currentVersion + 0.001)
-
+                    // def integerPart = env.BUILD_NUMBER.toInteger()-1
+                    // def nextBuildNumber =integerPart+0.1
+                    // def incrementedVersion = String.format("%.3f", nextBuildNumber)
+        
+                    def test = docker image inspect "rociomm123/train-schedule":latest --format '{{ .Config.Env }}'
+                    print test
                     // Use the incremented version number for building and pushing the Docker image
                     docker.withRegistry("${DOCKER_REGISTRY}", "${DOCKER_HUB_CREDENTIALS}") {
                     //     // Push Docker image with the incremented version number as tag
                     //     app.push("${incrementedVersion}")
-                    // docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
                         app.push("${env.BUILD_NUMBER}")
                         // app.push("latest")
                     }
