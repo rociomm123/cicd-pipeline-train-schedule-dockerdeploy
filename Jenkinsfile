@@ -22,6 +22,17 @@ pipeline {
                 }
             }
         }
+        stages {
+            stage('Inspect Docker Image') {
+                steps {
+                    script {
+                        def dockerImage = docker.image('rociomm123/train-schedule:latest')
+                        def tagsOutput = dockerImage.inspect('--format', '{{ .RepoTags }}').trim()
+                        echo "Repository tags: ${tagsOutput}"
+                    }
+                }
+            }
+        }
         stage('Push Docker Image') {
             when {
                 branch 'master'
