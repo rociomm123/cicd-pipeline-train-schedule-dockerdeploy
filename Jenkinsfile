@@ -33,8 +33,14 @@ pipeline {
             steps {
                 script {
                     // Get the list of existing tags from the Docker registry
+                    // Pull the Docker image to get the latest tag
                     def tagsOutput = app.pull("${DOCKER_REGISTRY}/train-schedule", quiet: true, allTags: true).image.inside {
-                        sh(returnStdout: true, script: "docker image inspect --format='{{.RepoTags}}' ${DOCKER_REGISTRY}/train-schedule").trim()
+                        // Get the latest tag from the output of 'docker image inspect' command
+                        def latestTag = sh(returnStdout: true, script: "docker image inspect --format='{{index .RepoTags -1}}' ${DOCKER_REGISTRY}/train-schedule").trim()
+                        // Extract only the version number from the tag
+                        def currentVersion = latestTag.tokenize(':').last()
+                        // If no version number is found, default to 0.001
+                        currentVersion ?: '0.001'
                     }
                     print "tagsOutput="+tagsOutput
                     // def versionNumbers = tagsOutput.tokenize().findAll { it =~ /^\d+\.\d+\d+$/ }.collect { it.tokenize('/')[1].tokenize(':')[1] as Float }
