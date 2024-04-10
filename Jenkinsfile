@@ -19,7 +19,8 @@ pipeline {
             }
             steps {
                 script {
-                    print "hola1="+("${env.BUILD_NUMBER}")
+                    test=docker images | grep rociomm123/train-schedule
+                    print "hola1="+test
                     app = docker.build("rociomm123/train-schedule")
                     app.inside {
                         sh 'echo $(curl localhost:8080)'
