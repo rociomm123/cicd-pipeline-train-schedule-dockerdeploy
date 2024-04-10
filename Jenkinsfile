@@ -33,25 +33,28 @@ pipeline {
             steps {
                 script {
                     // Get the list of existing tags from the Docker registry
-                    def tagsOutput = sh(script: "docker pull ${DOCKER_REGISTRY}/train-schedule--quiet --all-tags && docker image inspect --format='{{.RepoTags}}' ${DOCKER_REGISTRY}/train-schedule", returnStdout: true).trim()
-                    // Extract version numbers from the tags
-                    def versionNumbers = tagsOutput.tokenize().findAll { it =~ /^\d+\.\d+\d+$/ }.collect { it.tokenize('/')[1].tokenize(':')[1] as Float }
+                    // def tagsOutput = sh(script: "docker pull ${DOCKER_REGISTRY}/train-schedule--quiet --all-tags && docker image inspect --format='{{.RepoTags}}' ${DOCKER_REGISTRY}/train-schedule", returnStdout: true).trim()
+                    // // Extract version numbers from the tags
+                    // def versionNumbers = tagsOutput.tokenize().findAll { it =~ /^\d+\.\d+\d+$/ }.collect { it.tokenize('/')[1].tokenize(':')[1] as Float }
 
-                    // Find the highest version number
-                    def currentVersion = versionNumbers.max()
+                    // // Find the highest version number
+                    // def currentVersion = versionNumbers.max()
                     
-                    // If there are no existing tags, start from version 0.001
-                    if (currentVersion == null) {
-                        currentVersion = 0.001
-                    }
+                    // // If there are no existing tags, start from version 0.001
+                    // if (currentVersion == null) {
+                    //     currentVersion = 0.001
+                    // }
 
                     // Increment version number by 0.001 and format to three decimal places
-                    def incrementedVersion = String.format("%.3f", currentVersion + 0.001)
+                    // def incrementedVersion = String.format("%.3f", currentVersion + 0.001)
 
                     // Use the incremented version number for building and pushing the Docker image
                     docker.withRegistry("${DOCKER_REGISTRY}", "${DOCKER_HUB_CREDENTIALS}") {
-                        // Push Docker image with the incremented version number as tag
-                        app.push("${incrementedVersion}")
+                    //     // Push Docker image with the incremented version number as tag
+                    //     app.push("${incrementedVersion}")
+                    // docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                        app.push("${env.BUILD_NUMBER}")
+                        // app.push("latest")
                     }
                 }
             }
