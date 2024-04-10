@@ -32,7 +32,7 @@ pipeline {
                         // def formattedBuildNumber = String.format("%.3f", (env.BUILD_NUMBER.toInteger() + 0.1) / 10.0)
                         // app.push("${env.formattedBuildNumber}")
                         app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
+                        // app.push("latest")
                     }
                 }
             }
