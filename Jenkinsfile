@@ -27,7 +27,7 @@ pipeline {
                 script {
                     def dockerImage = docker.image('rociomm123/train-schedule:latest')
                     def tagsOutput = dockerImage.inspect('--format', '{{ .RepoTags }}').trim()
-                    echo "Repository tags: ${tagsOutput}"
+                    print "Repository tags: ${tagsOutput}"
                 }
             }
         }
