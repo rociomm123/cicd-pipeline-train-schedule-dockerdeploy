@@ -19,6 +19,7 @@ pipeline {
             }
             steps {
                 script {
+                    print "hola1="+("${env.BUILD_NUMBER}")
                     app = docker.build("rociomm123/train-schedule")
                     app.inside {
                         sh 'echo $(curl localhost:8080)'
