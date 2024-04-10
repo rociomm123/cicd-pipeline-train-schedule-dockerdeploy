@@ -22,15 +22,15 @@ pipeline {
                 }
             }
         }
-        stage('Inspect Docker Image') {
-            steps {
-                script {
-                    def dockerImage = docker.image('rociomm123/train-schedule:latest')
-                    def tagsOutput = dockerImage.inspect('--format', '{{ .RepoTags }}').trim()
-                    print "Repository tags: ${tagsOutput}"
-                }
-            }
-        }
+        // stage('Inspect Docker Image') {
+        //     steps {
+        //         script {
+        //             def dockerImage = docker.image('rociomm123/train-schedule:latest')
+        //             def tagsOutput = dockerImage.inspect('--format', '{{ .RepoTags }}').trim()
+        //             print "Repository tags: ${tagsOutput}"
+        //         }
+        //     }
+        // }
     
         stage('Push Docker Image') {
             when {
