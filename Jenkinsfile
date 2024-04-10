@@ -8,23 +8,6 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
-
-        stage('Inspect Docker Image') {
-            when {
-                branch 'master'
-            }
-            steps {
-                script {
-                    // Define the Docker image
-                    def dockerImage = docker.image('rociomm123/train-schedule:latest')
-                    // Inspect the Docker image to retrieve its tags
-                    def tagsOutput = dockerImage.inspect('--format', '{{ .RepoTags }}').trim()
-                    // Output the retrieved tags
-                    echo "Repository tags: ${tagsOutput}"
-                }
-            }
-        }
-        
         stage('Build Docker Image') {
             when {
                 branch 'master'
