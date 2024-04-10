@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
     stages {
@@ -9,6 +8,7 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
+
         stage('Inspect Docker Image') {
             when {
                 branch 'master'
@@ -23,7 +23,8 @@ pipeline {
                     echo "Repository tags: ${tagsOutput}"
                 }
             }
-        }        
+        }
+        
         stage('Build Docker Image') {
             when {
                 branch 'master'
@@ -51,6 +52,7 @@ pipeline {
                 }
             }
         }
+        
         stage('DeployToProduction') {
             when {
                 branch 'master'
