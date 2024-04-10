@@ -37,6 +37,8 @@ pipeline {
                         integerPart += 1
                         decimalPart -= 1.0
                     }
+                    // Format build number to three decimal places
+                    def formattedBuildNumber = String.format("%d%.3f", integerPart, decimalPart)
 
 
                     docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
