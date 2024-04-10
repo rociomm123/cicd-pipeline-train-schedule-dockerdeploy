@@ -33,8 +33,9 @@ pipeline {
             steps {
                 script {
                     // Get the list of existing tags from the Docker registry
-                    def tagsOutput = sh(script: "docker pull ${DOCKER_REGISTRY}/train-schedule--quiet --all-tags && docker image inspect --format='{{.RepoTags}}' ${DOCKER_REGISTRY}/train-schedule", returnStdout: true).trim()
-                    // // Extract version numbers from the tags
+                    def tagsOutput = app.pull("${DOCKER_REGISTRY}/train-schedule", quiet: true, allTags: true).image.inside {
+                        sh(returnStdout: true, script: "docker image inspect --format='{{.RepoTags}}' ${DOCKER_REGISTRY}/train-schedule").trim()
+                    }
                     print "tagsOutput="+tagsOutput
                     // def versionNumbers = tagsOutput.tokenize().findAll { it =~ /^\d+\.\d+\d+$/ }.collect { it.tokenize('/')[1].tokenize(':')[1] as Float }
 
