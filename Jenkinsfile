@@ -27,12 +27,14 @@ pipeline {
             }
             steps {
                 script {
+                    // Calculate the build number by adding 0.001
+                    def buildNumber = (env.BUILD_NUMBER.toInteger() * 1000 + 1) / 1000.0
+                    // Format the build number to three decimal places
+                    def formattedBuildNumber = String.format("%.3f", buildNumber)
+
                     docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        // Increase build number by 0.1 and format to three decimal places
-                        def formattedBuildNumber = String.format("%.3f", (env.BUILD_NUMBER.toInteger() + 0.1))
-                        // app.push("${env.formattedBuildNumber}")
+                        // Push Docker image with the formatted build number as tag
                         app.push("${formattedBuildNumber}")
-                        // app.push("latest")
                     }
                 }
             }
