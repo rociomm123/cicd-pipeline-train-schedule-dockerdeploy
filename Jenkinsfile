@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_REGISTRY = 'https://registry.hub.docker.com'
+        DOCKER_HUB_CREDENTIALS = 'docker_hub_login'
+    }
+    
     stages {
         stage('Build') {
             steps {
@@ -27,23 +32,26 @@ pipeline {
             }
             steps {
                 script {
-                    // Split build number into integer and decimal parts
-                    def integerPart = env.BUILD_NUMBER.toInteger()
-                    def decimalPart = env.BUILD_NUMBER.toDouble() - integerPart
+                    // Get the list of existing tags from the Docker registry
+                    def tagsOutput = sh(script: "docker pull ${DOCKER_REGISTRY}/your-image-name --quiet --all-tags && docker image inspect --format='{{.RepoTags}}' ${DOCKER_REGISTRY}/your-image-name", returnStdout: true).trim()
+                    // Extract version numbers from the tags
+                    def versionNumbers = tagsOutput.tokenize().findAll { it =~ /^\d+\.\d+\d+$/ }.collect { it.tokenize('/')[1].tokenize(':')[1] as Float }
 
-                    // Increment decimal part by 0.001 and handle overflow
-                    decimalPart += 0.001
-                    if (decimalPart >= 1.0) {
-                        integerPart += 1
-                        decimalPart -= 1.0
+                    // Find the highest version number
+                    def currentVersion = versionNumbers.max()
+                    
+                    // If there are no existing tags, start from version 0.001
+                    if (currentVersion == null) {
+                        currentVersion = 0.001
                     }
-                    // Format build number to three decimal places
-                    def formattedBuildNumber = String.format("%d%.3f", integerPart, decimalPart)
 
+                    // Increment version number by 0.001 and format to three decimal places
+                    def incrementedVersion = String.format("%.3f", currentVersion + 0.001)
 
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        // Push Docker image with the formatted build number as tag
-                        app.push("${formattedBuildNumber}")
+                    // Use the incremented version number for building and pushing the Docker image
+                    docker.withRegistry("${DOCKER_REGISTRY}", "${DOCKER_HUB_CREDENTIALS}") {
+                        // Push Docker image with the incremented version number as tag
+                        app.push("${incrementedVersion}")
                     }
                 }
             }
