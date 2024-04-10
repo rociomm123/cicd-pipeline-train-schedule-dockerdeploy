@@ -54,8 +54,8 @@ pipeline {
                     // def nextBuildNumber =integerPart+0.1
                     // def incrementedVersion = String.format("%.3f", nextBuildNumber)
         
-                    def test = docker image inspect "rociomm123/train-schedule":latest --format '{{ .Config.Env }}'
-                    print test
+                    // def test = docker image inspect "rociomm123/train-schedule":latest --format '{{ .Config.Env }}'
+                    // print test
                     // Use the incremented version number for building and pushing the Docker image
                     docker.withRegistry("${DOCKER_REGISTRY}", "${DOCKER_HUB_CREDENTIALS}") {
                     //     // Push Docker image with the incremented version number as tag
