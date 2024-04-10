@@ -35,7 +35,7 @@ pipeline {
                     // Get the list of existing tags from the Docker registry
                     // Pull the Docker image to get the latest tag
 
-                    print ("${env.BUILD_NUMBER}")
+                    print "hola="+("${env.BUILD_NUMBER}")
                     // def versionNumbers = tagsOutput.tokenize().findAll { it =~ /^\d+\.\d+\d+$/ }.collect { it.tokenize('/')[1].tokenize(':')[1] as Float }
 
                     // // Find the highest version number
