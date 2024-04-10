@@ -29,7 +29,7 @@ pipeline {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
                         // Increase build number by 0.1 and format to three decimal places
-                        def formattedBuildNumber = String.format("%.3f", (env.BUILD_NUMBER.toInteger() + 0.1) / 10.0)
+                        def formattedBuildNumber = String.format("%.3f", (env.BUILD_NUMBER.toInteger() + 0.1))
                         // app.push("${env.formattedBuildNumber}")
                         app.push("${formattedBuildNumber}")
                         // app.push("latest")
