@@ -15,7 +15,10 @@ pipeline {
             }
             steps {
                 script {
-                    def test = docker.inspect("rociomm123/train-schedule"):latest -f '{{ .RepoTags }}' 
+                    def tagsOutput = docker.image('rociomm123/train-schedule:latest').inside {
+    sh(script: "docker inspect --format='{{ .RepoTags }}' rociomm123/train-schedule:latest", returnStdout: true).trim()
+}
+                    print "tagsOutput="=tagsOutput
                     app = docker.build("rociomm123/train-schedule")
                     app.inside {
                         sh 'echo $(curl localhost:8080)'
