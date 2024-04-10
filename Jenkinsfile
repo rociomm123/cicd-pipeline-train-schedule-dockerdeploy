@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     // Calculate the build number by adding 0.001
-                    def buildNumber = (env.BUILD_NUMBER.toInteger() * 1000 + 1) / 1000.0
+                    def buildNumber = (env.BUILD_NUMBER.toFloat() * 1000 + 1) / 1000.0
                     // Format the build number to three decimal places
                     def formattedBuildNumber = String.format("%.3f", buildNumber)
 
